@@ -1,32 +1,35 @@
-// Functions for converting vectors between gray and two's complement binary
-package gray_pkg;
+/* Functions for converting vectors between gray and two's complement binary
+ This doesn't work well because it doesn't adapt to the size of its inputs.
+ Going to change this to use parameterized classes since Vivado 2022.x
+ has added support for it.*/
+// package gray_pkg;
 
-    localparam vecsize = 256;
+//     localparam vecsize = 256;
 
-    // convert binary vector to gray
-    // gray_val(x) = bin_val(x) xor bin_val(x+1)
-    function automatic [vecsize-1:0] to_gray(input [vecsize-1:0] bin_val);
-        var [vecsize-1:0] gray_val;
-        gray_val = bin_val;
-        foreach (bin_val[i]) begin
-            if (i < $left(bin_val)) begin
-                gray_val[i] = bin_val[i] ^ bin_val[i+1];
-            end
-        end
-        return gray_val;
-    endfunction
+//     // convert binary vector to gray
+//     // gray_val(x) = bin_val(x) xor bin_val(x+1)
+//     function automatic [vecsize-1:0] to_gray(input [vecsize-1:0] bin_val);
+//         var [vecsize-1:0] gray_val;
+//         gray_val = bin_val;
+//         foreach (bin_val[i]) begin
+//             if (i < $left(bin_val)) begin
+//                 gray_val[i] = bin_val[i] ^ bin_val[i+1];
+//             end
+//         end
+//         return gray_val;
+//     endfunction
 
-    // convert gray vector to binary
-    // bin_val(x) = xor all gray_val bits at x and above
-    function automatic [vecsize-1:0] to_bin(input [vecsize-1:0] gray_val);
-        var [vecsize-1:0] bin_val = gray_val;
-        foreach (gray_val[i]) begin
-            bin_val[i] = ^(gray_val >> i);
-        end
-        return bin_val;
-    endfunction
+//     // convert gray vector to binary
+//     // bin_val(x) = xor all gray_val bits at x and above
+//     function automatic [vecsize-1:0] to_bin(input [vecsize-1:0] gray_val);
+//         var [vecsize-1:0] bin_val = gray_val;
+//         foreach (gray_val[i]) begin
+//             bin_val[i] = ^(gray_val >> i);
+//         end
+//         return bin_val;
+//     endfunction
 
-endpackage
+// endpackage
 
 /* In a dual-clock FIFO, we need to perform the same operations on both the write pointer
 and read pointer: increment and transfer across a clock boundary. This module takes care
@@ -149,6 +152,8 @@ module tb_fifo_2clk_param #(parameter WIDTH=8, parameter DEPTH=4);
     task cwait (input int c=1);
         for (integer i=0; i<c; i++) @(posedge clk);
     endtask
+
+    // explore fork/join for simultaneous write/read
 
     // Set up timing, clock, and reset
     timeunit 1ns;
