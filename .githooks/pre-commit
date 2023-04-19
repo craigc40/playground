@@ -1,0 +1,22 @@
+#!/bin/sh
+
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+# Include a check for main, develop, and master branches
+# repos where 'master' is still used even though we're encouraging a change to
+# 'main' everywhere.
+
+if [ "$branch" = "develop" ]; then
+  echo "Commits to develop are not allowed"
+  exit 1
+fi
+
+if [ "$branch" = "main" ]; then
+  echo "Commits to main are not allowed"
+  exit 1
+fi
+
+if [ "$branch" = "master" ]; then
+  echo "Commits to master are not allowed"
+  exit 1
+fi
