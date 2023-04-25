@@ -44,13 +44,14 @@ endpackage
 
 // Test converting between gray and binary for values that are easy to predict
 module tb_test_gray_onehot #(parameter WIDTH=8);
+    import gray_pkg::*;
 
     Gray #(WIDTH) obj;
 
     initial begin
         obj = new;
-        $display("testing one-hot cases")
-        for (int i=1; i<=WIDTH; i++) begin
+        $display("testing one-hot cases");
+        for (int i=1; i<WIDTH; i++) begin
             obj.testme(1<<i, 1<<i | 1<<(i-1));
             obj.testme('hFF>>(7-i), 1<<i);
         end
@@ -63,9 +64,12 @@ module tb_gray_pkg;
     timeprecision 1ps;
     import gray_pkg::*;
 
+    Gray #(3) obj3;
+    Gray #(4) obj4;
+
     initial begin
         // verify all possibilities for 3 bits
-        obj3 = Gray#(3)::new();
+        obj3 = new;
         obj3.testme('b000, 'b000);
         obj3.testme('b001, 'b001);
         obj3.testme('b010, 'b011);
@@ -76,7 +80,7 @@ module tb_gray_pkg;
         obj3.testme('b111, 'b100);
 
         // verify all possibilities for 4 bits
-        obj4 = Gray#(4)::new();
+        obj4 = new;
         obj4.testme('b0000, 'b0000);
         obj4.testme('b0001, 'b0001);
         obj4.testme('b0010, 'b0011);
@@ -89,14 +93,14 @@ module tb_gray_pkg;
         obj4.testme('b1001, 'b1101);
         obj4.testme('b1010, 'b1111);
         obj4.testme('b1011, 'b1110);
-        obj4.testme('b1100, 'b1010)
+        obj4.testme('b1100, 'b1010);
         obj4.testme('b1101, 'b1011);
         obj4.testme('b1110, 'b1001);
         obj4.testme('b1111, 'b1000);
     end;
 
     for (genvar i=1; i<=8; i++) begin
-        tb_test_gray_onehot testx #(i);
+        tb_test_gray_onehot #(i) testx ();
     end
 
 endmodule
